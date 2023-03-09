@@ -13,15 +13,18 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'detail_zurnal.dart';
 
-class GunesScreen extends StatefulWidget {
+class YlymScreen extends StatefulWidget {
   @override
-  State<GunesScreen> createState() => _GunesScreenState();
+  State<YlymScreen> createState() => _YlymScreenState();
 }
 
-class _GunesScreenState extends State<GunesScreen> {
+class _YlymScreenState extends State<YlymScreen> {
   String url = "";
+  int? number;
 
   uploadDataToFirebase() async {
+    // genrate random number
+    //number = Random().nextInt(10);
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     File pick = File(result!.files.single.path.toString());
     var file = pick.readAsBytesSync();
@@ -32,9 +35,9 @@ class _GunesScreenState extends State<GunesScreen> {
     TaskSnapshot snapshot = await task;
     url = await snapshot.ref.getDownloadURL();
     // upload url cloud firebase
-    await FirebaseFirestore.instance.collection("file").doc().set({
+    await FirebaseFirestore.instance.collection("ylym").doc().set({
       'fileUrl': url,
-      //'num': "Nesir " + number.toString() + " Güneş žurnaly"
+      //'num': "Neşir " +  " Saglyk žurnaly"
     });
   }
 
@@ -56,7 +59,7 @@ class _GunesScreenState extends State<GunesScreen> {
                         left: size.width * .1,
                         right: size.width * .02),
                     height: size.height * .40,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("assets/images/bg.png"),
                         fit: BoxFit.fitWidth,
@@ -76,7 +79,7 @@ class _GunesScreenState extends State<GunesScreen> {
                   padding: EdgeInsets.only(top: size.height * .41 - 20),
                   child: StreamBuilder(
                     stream: FirebaseFirestore.instance
-                        .collection("file")
+                        .collection("ylym")
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
@@ -91,10 +94,8 @@ class _GunesScreenState extends State<GunesScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => DetailZurnal(
-                                                url: x['fileUrl'],
-                                                i: i,
-                                              )));
+                                          builder: (context) =>
+                                              YlymDetails(url: x['fileUrl'],i: i,)));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
@@ -120,14 +121,18 @@ class _GunesScreenState extends State<GunesScreen> {
                                         text: TextSpan(
                                           children: [
                                             TextSpan(
-                                              text:
-                                                  'Neşir ${i + 1} Güneş žurnaly',
+                                              text: 'Neşir ${i+1} Ýaşlaryň ylmy we \ntehnikasy žurnaly',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 color: kBlackColor,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
+                                            // TextSpan(
+                                            //   text: magazinModel.details,
+                                            //   style: TextStyle(
+                                            //       color: kLightBlackColor),
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -239,7 +244,7 @@ class _GunesScreenState extends State<GunesScreen> {
                           top: 0,
                           right: 0,
                           child: Image.asset(
-                            "assets/images/gunes.jpeg",
+                            "assets/images/ylym.jpg",
                             width: 120,
                             fit: BoxFit.fitWidth,
                           ),
@@ -347,7 +352,7 @@ class BookInfo extends StatelessWidget {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Gunes",
+                      "Ýaşlaryň ylmy we tehnikasy",
                       style: Theme.of(context)
                           .textTheme
                           .headline4
@@ -359,7 +364,7 @@ class BookInfo extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(top: 0),
                     child: Text(
-                      "zurnaly",
+                      "žurnaly",
                       style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -376,7 +381,7 @@ class BookInfo extends StatelessWidget {
                             padding:
                                 EdgeInsets.only(top: this.size.height * .02),
                             child: Text(
-                              "Korpeje cagalarymyz ucin her hepdede cap edilyan Gunes zurnaly….",
+                              "Ýaşlar ylym we tehnikany ösdürmek, geljege barýan ýoluň açarydyr….",
                               maxLines: 5,
                               style: TextStyle(
                                 fontSize: 10,
@@ -395,7 +400,7 @@ class BookInfo extends StatelessWidget {
                             // child: ElevatedButton(
                             //   onPressed: () {},
                             //   child: Text(
-                            //     "Okamak",
+                            //     "Read",
                             //     style: TextStyle(fontWeight: FontWeight.bold),
                             //   ),
                             // ),
@@ -424,12 +429,11 @@ class BookInfo extends StatelessWidget {
               child: Container(
                 color: Colors.transparent,
                 child: Image.asset(
-                  "assets/images/gunes.jpeg",
-                  //height: double.infinity,
+                  "assets/images/ylym.jpg",
                   height: 200,
                   width: 70,
                   alignment: Alignment.topRight,
-                  //fit: BoxFit.fill,
+                  // fit: BoxFit.fitWidth,
                 ),
               )),
         ],
